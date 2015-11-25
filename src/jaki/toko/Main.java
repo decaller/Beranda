@@ -26,6 +26,7 @@ public class Main{ //Beranda
     Gudang gudang;
     ArrayList<Barang> keranjang;
 
+
     /** Program inti
      * Program inti menjalankan program beranda dimana dimulai dari menu untuk mengaktifkan beranda
      */
@@ -235,35 +236,37 @@ public class Main{ //Beranda
                 filtered = stokBarang;
             }
 
-            do {
-                int i = 0;
-                for (Barang barang : filtered){
-                    System.out.println(i+1 + " - " + barang.getNama() + " " + barang.getJumlah() + " unit");
-                    i++;
-                }
-
-                System.out.println("Pilih barang untuk detail :");
-                Barang barangPilihan = filtered.get(inAngka.nextInt());
-                System.out.println("Jenis :" + barangPilihan.getJenis());
-                System.out.println("Merek :" + barangPilihan.getMerek());
-                System.out.println("Nomor Seri :" + barangPilihan.getNomorSeri());
-                System.out.println("Warna :" + barangPilihan.getWarna());
-                System.out.println("Deskripsi :" + barangPilihan.getDeskripsi());
-                System.out.println("Harga :" + barangPilihan.getHarga());
-                if (barangPilihan.getJumlah() == 0){
-                    System.out.println("Barang sedang habis");
-                } else {
-                    System.out.println("Barang tersedia");
-                }
-                System.out.print("Ketik -1 untuk kembali ke kategori, 0 untuk melihat barang lain : ");
-
-            } while (!(inAngka.nextInt() == -1));
+            listFiltered(filtered);
 
             System.out.print("Ketik -1 untuk kembali ke menu, 0 untuk melihat kategori lain : ");
 
         } while (!(inAngka.nextInt() == -1));
+    }
 
+    private void listFiltered(ArrayList<Barang> filtered){
+        do {
+            int i = 0;
+            for (Barang barang : filtered){
+                System.out.println(i+1 + " - " + barang.getNama() + " " + barang.getJumlah() + " unit");
+                i++;
+            }
 
+            System.out.println("Pilih barang untuk detail :");
+            Barang barangPilihan = filtered.get(inAngka.nextInt());
+            System.out.println("Jenis :" + barangPilihan.getJenis());
+            System.out.println("Merek :" + barangPilihan.getMerek());
+            System.out.println("Nomor Seri :" + barangPilihan.getNomorSeri());
+            System.out.println("Warna :" + barangPilihan.getWarna());
+            System.out.println("Deskripsi :" + barangPilihan.getDeskripsi());
+            System.out.println("Harga :" + barangPilihan.getHarga());
+            if (barangPilihan.getJumlah() == 0){
+                System.out.println("Barang sedang habis");
+            } else {
+                System.out.println("Barang tersedia");
+            }
+            System.out.print("Ketik -1 untuk kembali, 0 untuk melihat barang lain : ");
+
+        } while (!(inAngka.nextInt() == -1));
 
     }
 
@@ -272,18 +275,70 @@ public class Main{ //Beranda
             System.out.println("Anda belum membeli barang apapun.");
             return;
         }
-        System.out.println("Isi keranjang belanja anda :");
-        int totalBelanja = 0;
-        for (Barang barang : keranjang){
-            totalBelanja += printdanhargaBarang(barang);
-        }
-        System.out.println("Jumlah barang : " + keranjang.size() + " macam");
-        System.out.println("Total Belanja : " + totalBelanja + " rupiah");
+        int choose;
+        do {
+            System.out.println("Isi keranjang belanja anda :");
+            int totalBelanja = 0;
+            for (Barang barang : keranjang){
+                totalBelanja += printdanhargaBarang(barang);
+            }
+            System.out.println("Jumlah barang : " + keranjang.size() + " macam");
+            System.out.println("Total Belanja : " + totalBelanja + " rupiah");
+
+            System.out.println("1 - cek detail barang di keranjang");
+            System.out.println("2 - hapus barang di keranjang");
+            System.out.print("Masukkan nomor pilihan (-1 untuk kembali ke menu) : ");
+            choose = inAngka.nextInt();
+            switch (choose){
+                case 1 : listFiltered(keranjang);
+                      break;
+                case 2 : keranjang = deleteBelanjaan(keranjang);
+                      break;
+            }
+
+        } while (!(choose == -1));
+
+    }
+
+    private ArrayList<Barang> deleteBelanjaan(ArrayList<Barang> daftarBarang) {
+        int i = 0;
+        do {
+            System.out.println("Daftar barang :");
+            for (Barang barang : daftarBarang){
+                System.out.println(i+1 + " - " + barang.getNama() + " " + barang.getJumlah() + " unit");
+                i++;
+            }
+            System.out.print("Masukkan nomor yang ingin dihapus :");
+            daftarBarang.remove(inAngka.nextInt()-1);
+
+            System.out.print("Ketik -1 untuk kembali, 0 untuk menghapus barang lain : ");
+
+        } while (!(inAngka.nextInt() == -1));
+        return daftarBarang;
     }
 
     private void beli(){
-        System.out.println("Masukkan nama barang:");
-        //TODO
+        do {
+            System.out.println("Masukkan nomor seri barang :");
+            String nomorBarang = inKata.nextLine();
+            Barang barangPilihan = null;
+            for (Barang barang : gudang.getStok()){
+                if (barang.getNomorSeri().equalsIgnoreCase(nomorBarang)){
+                    barangPilihan = barang;
+                    System.out.println("Nama Barang : " + barangPilihan.getNama() + " " + barangPilihan.getHarga());
+                    System.out.println("Masukkan jumlah yang ingin anda beli : ");
+                    barangPilihan.setJumlah(inAngka.nextInt());
+                    keranjang.add(barangPilihan);
+                    System.out.println(barangPilihan.getNomorSeri() + " berhasil dimasukkan keranjang sebanyak " + barangPilihan.getJumlah() + " unit");
+
+                }
+            }
+            if (barangPilihan == null){
+                System.out.print("Barang tidak ditemukan");
+            }
+            System.out.print("Ketik -1 untuk kembali, 0 untuk membeli barang lain : ");
+
+        } while (!(inAngka.nextInt() == -1));
 
     }
 
