@@ -1,6 +1,7 @@
 package jaki.toko;
 
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /** Kelas Beranda digunakan untuk melyaani pelanggan dan menjadi inti dari program
@@ -18,32 +19,35 @@ public class Main{ //Beranda
     int pilihan = 0;
 
     //variabel yang akan dipakai kemudian
-    Arraylist<Pelanggan> daftarPelanggan;
+    ArrayList<Pelanggan> daftarPelanggan;
     Gudang gudang;
-    Arraylist<Barang> keranjang;
+    ArrayList<Barang> keranjang;
 
     /** Program inti
      * Program inti menjalankan program beranda dimana dimulai dari menu untuk mengaktifkan beranda
      */
-    public static void main(String[] args) {
+    public void main(String[] args) {
 
         do{
             makeGudang();
-            pilihan = choiceMenuAdmin();
-            case pilihan
-                1 : startJualan();
-                2 : cekStok();
-                3 : cekOrder();
-                4 : tutupBeranda();
-
-        } while(!pilihan = 4);
+            int pilihan = choiceMenuAdmin();
+            switch (pilihan){
+                case 1 : startJualan();
+                    break;
+                case 2 : cekStok();
+                    break;
+                case 3 : cekOrder();
+                    break;
+                case 4 : tutupBeranda();
+                    break;
+            }
+        } while(!(pilihan == 4));
 
     }
 
-
     //METHOD UNTUK ADMIN
 
-    public void makeGudang(){
+    private void makeGudang(){
         System.out.println("Masukkan alamat gudang:");
         String alamatGudang = inKata.nextLine();
         System.out.println("Masukkan nomor telepon gudang:");
@@ -51,9 +55,9 @@ public class Main{ //Beranda
         gudang = new Gudang(alamatGudang,telponGudang);
     }
 
-    public int choiceMenuAdmin(){
+    private int choiceMenuAdmin(){
         System.out.println("Selamat datang di sistem Beranda!");
-        System.out.println("------------- MENU -------------")
+        System.out.println("------------- MENU -------------");
         System.out.println("1 - Mulai jualan!");
         System.out.println("2 - Cek Stok Barang");
         System.out.println("3 - Cek Orderan");
@@ -63,36 +67,44 @@ public class Main{ //Beranda
 
     }
 
-    public void cekStok(){
+    private void cekStok(){
         System.out.println("Stok barang di gudang :");
-        Arraylist<Barang> stokBarang = gudang.getStok();
+        ArrayList<Barang> stokBarang = gudang.getStok();
         for (Barang barang : stokBarang){
             System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
         }
-        System.out.println("Jumlah barang : " + stokBarang.length() + " macam");
+        System.out.println("Jumlah barang : " + stokBarang.size() + " macam");
     }
 
-    public void tutupBeranda(){
-        System.out.println("Program Beranda dimatikan")
+    private static void cekOrder() {
+    }
+
+    private void tutupBeranda(){
+        System.out.println("Program Beranda dimatikan");
     }
 
 
     //METHOD UNTUK PELANGGAN
-    public void startJualan(){
+    private void startJualan(){
         do{
             addPelanggan();
             pilihan = choiceMenuPelanggan();
-            case pilihan
-                1 : cekJualan();
-                2 : cekKeranjang();
-                3 : beli();
-                4 : checkOut();
+            switch (pilihan){
+                case 1 : cekJualan();
+                    break;
+                case 2 : cekKeranjang();
+                    break;
+                case 3 : beli();
+                    break;
+                case 4 : checkOut();
+                    break;
+            }
 
-        } while(!pilihan = 4);
+        } while(!(pilihan == 4));
 
     }
 
-    public void addPelanggan(){
+    private void addPelanggan(){
         System.out.println("Selamat datang di Beranda TOKO PAK ZAKI!");
         System.out.println("Berikut data gudang kami : ");
         System.out.println(gudang.getInfo());
@@ -105,7 +117,7 @@ public class Main{ //Beranda
         System.out.print("Alamat Pengiriman : ");
         String alamatPelanggan = inKata.nextLine();
 
-        Pelanggan pelanggan = new Pelanggan(namaPelanggan, telponPelanggan, alamatPelanggan)
+        Pelanggan pelanggan = new Pelanggan(namaPelanggan, telponPelanggan, alamatPelanggan);
         daftarPelanggan.add(pelanggan);
 
         System.out.println("Terima kasih, data anda telah masuk.");
@@ -113,8 +125,8 @@ public class Main{ //Beranda
         System.out.println("Selamat berbelanja di TOKO PAK ZAKI!");
     }
 
-    public int choiceMenuPelanggan(){
-        System.out.println("------------- MENU -------------")
+    private int choiceMenuPelanggan(){
+        System.out.println("------------- MENU -------------");
         System.out.println("1 - Lihat Daftar Produk");
         System.out.println("2 - Lihat Keranjang");
         System.out.println("3 - Beli Produk");
@@ -123,13 +135,13 @@ public class Main{ //Beranda
         return inAngka.nextInt();
     }
 
-    public void cekJualan(){
+    private void cekJualan(){
 
 
     }
 
-    public void cekKeranjang(){
-        if(keranjang){
+    private void cekKeranjang(){
+        if(keranjang.size() == 0){
             System.out.println("Anda belum membeli barang apapun.");
             return;
         }
@@ -141,14 +153,15 @@ public class Main{ //Beranda
             System.out.println("Harga: " + barang.getHarga() + " Total: " + hargaTotalBarang);
             totalBelanja += hargaTotalBarang;
         }
-        System.out.println("Jumlah barang : " + keranjang.length() + " macam");
+        System.out.println("Jumlah barang : " + keranjang.size() + " macam");
+        System.out.println("Total Belanja : " + totalBelanja + " rupiah");
     }
 
-    public void beli(){
+    private void beli(){
         System.out.println("Masukkan nama barang:");
     }
 
-    public void checkOut(){
+    private void checkOut(){
 
     }
 
