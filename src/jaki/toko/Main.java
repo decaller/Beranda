@@ -2,6 +2,8 @@ package jaki.toko;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 /** Kelas Beranda digunakan untuk melyaani pelanggan dan menjadi inti dari program
@@ -84,7 +86,6 @@ public class Main{ //Beranda
         for (Barang barang : stokBarang){
             System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
         }
-        System.out.println("Jumlah barang : " + stokBarang.size() + " macam");
     }
 
     private void cekOrder() {
@@ -177,7 +178,92 @@ public class Main{ //Beranda
     }
 
     private void cekJualan(){
-        //TODO
+
+        ArrayList<Barang> stokBarang = gudang.getStok();
+        Collections.sort(stokBarang, new Comparator<Barang>() {
+            @Override
+            public int compare(Barang b1, Barang b2) {
+                String j1 = ((Barang) b1).getJenis();
+                String j2 = ((Barang) b2).getJenis();
+                int stringComp = j1.compareTo(j2);
+
+                if (stringComp != 0) {
+                    return stringComp;
+                } else {
+                    String m1 = ((Barang) b1).getMerek();
+                    String m2 = ((Barang) b2).getMerek();
+                    return m1.compareTo(m2);
+                }
+
+            }
+        });
+        do {
+            System.out.println("Kategori barang :");
+            System.out.println("1 - Kamera");
+            System.out.println("2 - Handphone");
+            System.out.println("3 - Smartphone");
+            System.out.println("4 - Laptop");
+            System.out.println("");
+            System.out.println("0 - Untuk menampilkan semua barang");
+
+            System.out.println("Masukkan nomor pilihan  :");
+            int choose = inAngka.nextInt();
+            String filter = null;
+            switch (choose){
+                case 1 : filter = "kamera";
+                    break;
+                case 2 : filter = "handphone";
+                    break;
+                case 3 : filter = "smartphone";
+                    break;
+                case 4 : filter = "laptop";
+                    break;
+
+                case 0 : filter = "all";
+                    break;
+            }
+            ArrayList<Barang> filtered = null;
+            if (!filter.equalsIgnoreCase("all")){
+                System.out.println("Produk " + filter + " :");
+                for (Barang barang : stokBarang){
+                    if (barang.getJenis().equalsIgnoreCase(filter)){
+                        filtered.add(barang);
+                    }
+                }
+            } else {
+                System.out.println("Menampilkan semua produk :");
+                filtered = stokBarang;
+            }
+
+            do {
+                int i = 0;
+                for (Barang barang : filtered){
+                    System.out.println(i+1 + " - " + barang.getNama() + " " + barang.getJumlah() + " unit");
+                    i++;
+                }
+
+                System.out.println("Pilih barang untuk detail :");
+                Barang barangPilihan = filtered.get(inAngka.nextInt());
+                System.out.println("Jenis :" + barangPilihan.getJenis());
+                System.out.println("Merek :" + barangPilihan.getMerek());
+                System.out.println("Nomor Seri :" + barangPilihan.getNomorSeri());
+                System.out.println("Warna :" + barangPilihan.getWarna());
+                System.out.println("Deskripsi :" + barangPilihan.getDeskripsi());
+                System.out.println("Harga :" + barangPilihan.getHarga());
+                if (barangPilihan.getJumlah() == 0){
+                    System.out.println("Barang sedang habis");
+                } else {
+                    System.out.println("Barang tersedia");
+                }
+                System.out.print("Ketik -1 untuk kembali ke kategori, 0 untuk melihat barang lain : ");
+
+            } while (!(inAngka.nextInt() == -1));
+
+            System.out.print("Ketik -1 untuk kembali ke menu, 0 untuk melihat kategori lain : ");
+
+        } while (!(inAngka.nextInt() == -1));
+
+
 
     }
 

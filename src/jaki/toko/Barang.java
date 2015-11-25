@@ -38,4 +38,26 @@ public class Barang {
     public void setJumlah(int jumlah) {
         this.jumlah = jumlah;
     }
+
+    public String getJenis() {
+        return jenis;
+    }
+
+    public String getMerek() {
+        return merek;
+    }
+
+    public String getNomorSeri() {
+        return nomorSeri;
+    }
+
+    public String getWarna() {
+        return warna;
+    }
+
+    public String getDeskripsi() {
+        return deskripsi;
+    }
+
+
 }
