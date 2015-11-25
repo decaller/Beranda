@@ -177,7 +177,7 @@ public class Main{ //Beranda
     }
 
     private void cekJualan(){
-
+        //TODO
 
     }
 
@@ -197,6 +197,8 @@ public class Main{ //Beranda
 
     private void beli(){
         System.out.println("Masukkan nama barang:");
+        //TODO
+
     }
 
     private void checkOut(){
