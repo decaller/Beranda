@@ -76,7 +76,39 @@ public class Main{ //Beranda
         System.out.println("Jumlah barang : " + stokBarang.size() + " macam");
     }
 
-    private static void cekOrder() {
+    private void cekOrder() {
+        if (daftarPelanggan.size() == 0){
+            System.out.println("Belum ada pelanggan pada sesi ini.");
+            return;
+        }
+        int choice = 0;
+        do {
+            System.out.print("Daftar pelanggan : ");
+            int i = 1;
+            for (Pelanggan pelanggan : daftarPelanggan) {
+                System.out.println(i + " " + pelanggan.getNama());
+                i++;
+            }
+            System.out.print("Silahkan pilih nomor pelanggan (-1 untuk keluar): ");
+            choice = inAngka.nextInt();
+            Pelanggan pelanggan = daftarPelanggan.get(choice);
+            System.out.println(pelanggan.getNama() + "dengan info :");
+            System.out.println("Alamat :" + pelanggan.getAlamat());
+            System.out.println("Alamat :" + pelanggan.getTelpon());
+            System.out.println("telah membeli :");
+            int totalBelanja = 0;
+            for (Barang barang : pelanggan.getBelanjaan()){
+                System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
+                int hargaTotalBarang = barang.getHarga() * barang.getJumlah();
+                System.out.println("Harga: " + barang.getHarga() + " Total: " + hargaTotalBarang);
+                totalBelanja += hargaTotalBarang;
+            }
+            System.out.println("Total Belanja : " + totalBelanja + " rupiah");
+            System.out.print("-1 untuk keluar : ");
+            choice = inAngka.nextInt();
+
+        }while (!(choice == -1));
+
     }
 
     private void tutupBeranda(){
