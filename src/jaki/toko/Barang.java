@@ -34,4 +34,8 @@ public class Barang {
     public int getHarga() {
         return harga;
     }
+
+    public void setJumlah(int jumlah) {
+        this.jumlah = jumlah;
+    }
 }

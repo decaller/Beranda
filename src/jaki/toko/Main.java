@@ -107,7 +107,8 @@ public class Main{ //Beranda
     private void addPelanggan(){
         System.out.println("Selamat datang di Beranda TOKO PAK ZAKI!");
         System.out.println("Berikut data gudang kami : ");
-        System.out.println(gudang.getInfo());
+        System.out.println("Telepon : " + gudang.getTelponGudang());
+        System.out.println("Alamat : " + gudang.getAlamatGudang());
         System.out.println("");
         System.out.println("Silahkan masukkan data Anda :");
         System.out.print("Nama : ");
