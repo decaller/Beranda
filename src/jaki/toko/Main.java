@@ -17,6 +17,7 @@ public class Main{ //Beranda
     Scanner inKata = new Scanner(System.in);
     Scanner inAngka = new Scanner(System.in);
     int pilihan = 0;
+    Pelanggan activePelanggan;
 
     //variabel yang akan dipakai kemudian
     ArrayList<Pelanggan> daftarPelanggan;
@@ -44,6 +45,16 @@ public class Main{ //Beranda
         } while(!(pilihan == 4));
 
     }
+
+    //HELPER
+
+    private int printdanhargaBarang(Barang barang){
+        System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
+        int hargaTotalBarang = barang.getHarga() * barang.getJumlah();
+        System.out.println("Harga: " + barang.getHarga() + " Total: " + hargaTotalBarang);
+        return hargaTotalBarang;
+    }
+
 
     //METHOD UNTUK ADMIN
 
@@ -98,10 +109,7 @@ public class Main{ //Beranda
             System.out.println("telah membeli :");
             int totalBelanja = 0;
             for (Barang barang : pelanggan.getBelanjaan()){
-                System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
-                int hargaTotalBarang = barang.getHarga() * barang.getJumlah();
-                System.out.println("Harga: " + barang.getHarga() + " Total: " + hargaTotalBarang);
-                totalBelanja += hargaTotalBarang;
+                totalBelanja += printdanhargaBarang(barang);
             }
             System.out.println("Total Belanja : " + totalBelanja + " rupiah");
             System.out.print("-1 untuk keluar : ");
@@ -150,8 +158,8 @@ public class Main{ //Beranda
         System.out.print("Alamat Pengiriman : ");
         String alamatPelanggan = inKata.nextLine();
 
-        Pelanggan pelanggan = new Pelanggan(namaPelanggan, telponPelanggan, alamatPelanggan);
-        daftarPelanggan.add(pelanggan);
+        activePelanggan = new Pelanggan(namaPelanggan, telponPelanggan, alamatPelanggan);
+        daftarPelanggan.add(activePelanggan);
 
         System.out.println("Terima kasih, data anda telah masuk.");
         System.out.println("Selamat datang, " + namaPelanggan);
@@ -181,10 +189,7 @@ public class Main{ //Beranda
         System.out.println("Isi keranjang belanja anda :");
         int totalBelanja = 0;
         for (Barang barang : keranjang){
-            System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
-            int hargaTotalBarang = barang.getHarga() * barang.getJumlah();
-            System.out.println("Harga: " + barang.getHarga() + " Total: " + hargaTotalBarang);
-            totalBelanja += hargaTotalBarang;
+            totalBelanja += printdanhargaBarang(barang);
         }
         System.out.println("Jumlah barang : " + keranjang.size() + " macam");
         System.out.println("Total Belanja : " + totalBelanja + " rupiah");
@@ -195,7 +200,21 @@ public class Main{ //Beranda
     }
 
     private void checkOut(){
-
+        System.out.println("Berikut belanjaan anda :");
+        int total = hitungAkhir(keranjang);
+        System.out.println("Total belanjaan anda : " + total);
     }
+
+    private int hitungAkhir(ArrayList<Barang> keranjang){
+        if (this.keranjang.size() == 0){
+            return 0;
+        }
+        Barang barang = keranjang.get(0);
+        int harga = printdanhargaBarang(barang);
+        activePelanggan.addBelanjaan(barang);
+        keranjang.remove(0);
+        return harga + hitungAkhir(keranjang);
+    }
+
 
 }
