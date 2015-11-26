@@ -38,18 +38,18 @@ public class Main{
 
     /** MAIN METHOD
      * Menginisialisasi {@link #gudang}
-     * Menampilkan menu untuk admin.
+     * Menampilkan menu untuk admin {@link #choiceMenuAdmin}.
      *  menu 1 memulai method {@link #startJualan} untuk menjalankan beranda dan membuka toko.
-     *  menu 2 memulai method {@link #cekStok}
-     *  menu 3 memulai method {@link #cekOrder}
-     *  menu 4 memulai method {@link #tutupBeranda}
+     *  menu 2 memulai method {@link #cekStok} untuk menampilkan stok barang di gudang.
+     *  menu 3 memulai method {@link #cekOrder} untuk menampilkan order beranda.
+     *  menu 4 memulai method {@link #tutupBeranda} untuk menutup beranda.
      */
     public void main(String[] args) {
-        int pilihan = 0;
+        int pilihanAdmin = 0;
         do{
             makeGudang();
-            int pilihan = choiceMenuAdmin();
-            switch (pilihan){
+            int pilihanAdmin = choiceMenuAdmin();
+            switch (pilihanAdmin){
                 case 1 : startJualan();
                     break;
                 case 2 : cekStok();
@@ -59,12 +59,15 @@ public class Main{
                 case 4 : tutupBeranda();
                     break;
             }
-        } while(!(pilihan == 4));
+        } while(!(pilihanAdmin == 4));
 
     }
 
-    //HELPER
-
+    //HELPER METHOD
+    /* Mencetak harga barang dan jumlah nya dari sebuah objek {@link #barang}
+     * Menghitung harga dikali dengan jumlahnya dan mencetak harga barangnya.
+     * Mengembalikan nilai harga Total barang tadi.
+     */
     private int printdanhargaBarang(Barang barang){
         System.out.println(barang.getNama() + " " + barang.getJumlah() + " unit");
         int hargaTotalBarang = barang.getHarga() * barang.getJumlah();
@@ -73,8 +76,10 @@ public class Main{
     }
 
 
-    //METHOD UNTUK ADMIN
-
+    //ADMIN METHOD
+    /* Bertanya kepada admin alamat dan telepon gudang.
+     * Menginisiasi {@link #gudang} dengan alamat dan telepon sebelumnya.
+     */
     private void makeGudang(){
         System.out.println("Masukkan alamat gudang:");
         String alamatGudang = inKata.nextLine();
@@ -82,7 +87,10 @@ public class Main{
         String telponGudang = inKata.nextLine();
         gudang = new Gudang(alamatGudang,telponGudang);
     }
-
+    
+    /* Mencetak menu admin. 
+     * Mengembalikan nilai pilihan.
+     */
     private int choiceMenuAdmin(){
         System.out.println("Selamat datang di sistem Beranda!");
         System.out.println("------------- MENU -------------");
@@ -94,7 +102,19 @@ public class Main{
         return inAngka.nextInt();
 
     }
-
+    /* Memulai jualan dengan memanggil method {@link #startJualan}
+     */
+    private void startJualan(){
+        do{
+            menuJualan();
+            System.out.print("Ketik 0 untuk melanjutkan ke pelanggan selanjutnya (-1 untuk berhenti jualan) : ");
+            int pilihanAdmin = inAngka.nextInt();      
+            
+        }while(!(pilihanAdmin == -1))
+    }
+    
+    /* Mencetak stok barang dari {@link #gudang}
+     */
     private void cekStok(){
         System.out.println("Stok barang di gudang :");
         ArrayList<Barang> stokBarang = gudang.getStok();
@@ -103,6 +123,11 @@ public class Main{
         }
     }
 
+    /* Mencetak pelanggan.
+     * Jika ada maka dilakukan loop untuk mengeluarkan isi {@link #daftarPelanggan}
+     * Menanyakan detail pelanggan yang ingin diambil.
+     * Menampilkan detail pelanggan serta belanjaannya.
+     */
     private void cekOrder() {
         if (daftarPelanggan.size() == 0){
             System.out.println("Belum ada pelanggan pada sesi ini.");
@@ -117,7 +142,7 @@ public class Main{
                 i++;
             }
             System.out.print("Silahkan pilih nomor pelanggan (-1 untuk keluar): ");
-            choice = inAngka.nextInt();
+            choice = inAngka.nextInt()-1;
             Pelanggan pelanggan = daftarPelanggan.get(choice);
             System.out.println(pelanggan.getNama() + "dengan info :");
             System.out.println("Alamat :" + pelanggan.getAlamat());
@@ -137,17 +162,26 @@ public class Main{
 
     }
 
+    /* Mencetak kalimat bahwa beranda dimatikan.
+     */
     private void tutupBeranda(){
         System.out.println("Program Beranda dimatikan");
     }
 
 
     //METHOD UNTUK PELANGGAN
-    private void startJualan(){
+    /* Mengambil dan menambahkan data pelanggan dengan {@link #addPelanggan}
+     * Menampilkan menu untuk pelanggan {choiceMenuPelanggan}
+     *  menu 1 memulai method {@link #cekJualan} untuk menampilkan jualan
+     *  menu 2 memulai method {@link #cekKeranjang} untuk menampilkan isi keranjang
+     *  menu 3 memulai method {@link #beli} untuk membeli barang
+     *  menu 4 memulai method {@link #checkout} untuk menyelesaikan belanja
+     */
+    private void menuJualan(){
         do{
             addPelanggan();
-            pilihan = choiceMenuPelanggan();
-            switch (pilihan){
+            int pilihanPelanggan = choiceMenuPelanggan();
+            switch (pilihanPelanggan){
                 case 1 : cekJualan();
                     break;
                 case 2 : cekKeranjang();
@@ -158,10 +192,12 @@ public class Main{
                     break;
             }
 
-        } while(!(pilihan == 4));
-
+        } while(!(pilihanPelanggan == 4));
     }
-
+    
+    /* Menanyakan alamat dan telpon pelanggan
+     * Memasukkan pelanggan menjadi {@link #activePelanggan}. 
+     */
     private void addPelanggan(){
         System.out.println("Selamat datang di Beranda TOKO PAK ZAKI!");
         System.out.println("Berikut data gudang kami : ");
@@ -177,13 +213,15 @@ public class Main{
         String alamatPelanggan = inKata.nextLine();
 
         activePelanggan = new Pelanggan(namaPelanggan, telponPelanggan, alamatPelanggan);
-        daftarPelanggan.add(activePelanggan);
 
         System.out.println("Terima kasih, data anda telah masuk.");
         System.out.println("Selamat datang, " + namaPelanggan);
         System.out.println("Selamat berbelanja di TOKO PAK ZAKI!");
     }
 
+    /* Mencetak menu pelanggan.
+     * Mengembalikan nilai pilihan pelanggan.
+     */
     private int choiceMenuPelanggan(){
         System.out.println("------------- MENU -------------");
         System.out.println("1 - Lihat Daftar Produk");
@@ -194,6 +232,11 @@ public class Main{
         return inAngka.nextInt();
     }
 
+    /* Mengambil stok barang.
+     * Mengurutkan barang sesuai kategori kemudian merek.
+     * Menanyakan kategori dan membuat arraylist barang pilihan.
+     * Menampilkan detail barang pilihan {@link #listFiltered}.
+     */
     private void cekJualan(){
 
         ArrayList<Barang> stokBarang = gudang.getStok();
@@ -259,6 +302,9 @@ public class Main{
         } while (!(inAngka.nextInt() == -1));
     }
 
+    /* Menampilkan daftar barang dari filter yang telah ditentukan.
+     * Menampilkan detil dari barang pilihan.
+     */
     private void listFiltered(ArrayList<Barang> filtered){
         do {
             int i = 0;
@@ -286,6 +332,12 @@ public class Main{
 
     }
 
+    /* Jika keranjang kosong, tampilkan bahwa kosong.
+     * Tampilkan isi keranjang
+     * Tampilkan menu
+     *  menu 1 - tampilkan isi dengan {@link #listFiltered}
+     *  menu 2 - menghapus barang dengan {@link #deleteBelanjaan}
+     */
     private void cekKeranjang(){
         if(keranjang.size() == 0){
             System.out.println("Anda belum membeli barang apapun.");
@@ -304,7 +356,7 @@ public class Main{
             System.out.println("1 - cek detail barang di keranjang");
             System.out.println("2 - hapus barang di keranjang");
             System.out.print("Masukkan nomor pilihan (-1 untuk kembali ke menu) : ");
-            choose = inAngka.nextInt();
+            choose = inAngka.nextInt(); 
             switch (choose){
                 case 1 : listFiltered(keranjang);
                       break;
@@ -316,6 +368,9 @@ public class Main{
 
     }
 
+    /* Menampilkan barang dengan bentuk list.
+     * Menghapus barang pilihan.
+     */
     private ArrayList<Barang> deleteBelanjaan(ArrayList<Barang> daftarBarang) {
         int i = 0;
         do {
@@ -333,6 +388,9 @@ public class Main{
         return daftarBarang;
     }
 
+    /* Menanyakan nomor seri barang.
+     * Menampilkan barang dan menanyakan untuk dimasukkan ke keranjang.
+     */
     private void beli(){
         do {
             System.out.println("Masukkan nomor seri barang :");
@@ -358,6 +416,9 @@ public class Main{
 
     }
 
+    /* Menghitung belnajaan 
+     * Menambahkan {@link #activePelanggan} ke {@link #daftarPelanggan}
+     */
     private void checkOut(){
         System.out.println("Berikut belanjaan anda :");
         int total = hitungAkhir(keranjang);
@@ -371,14 +432,19 @@ public class Main{
         }
         pelangganActive.setMetodeBayar(metodeBayar);
         
+        daftarPelanggan.add(activePelanggan);
         System.out.println("Terima kasih telah berbelanja di TOKO PAK ZAKI.");
         System.out.println("");
         System.out.println("Silahkan untuk memberikan kesempatan kepada pelanggan lainnya.");
-        inKata.nextLine();
-        //TODO clear terminal
         
+        System.out.println("");System.out.println("");System.out.println("");System.out.println("");
     }
-
+    
+    /* Menghitung keranjang secara rekursif.
+     * Menampilkan barang.
+     * Menambahkan barang ke belanjaan {@link #activePelanggan}.
+     * Menghapus item yang sudah dihitung.
+     */
     private int hitungAkhir(ArrayList<Barang> keranjang){
         if (this.keranjang.size() == 0){
             return 0;
