@@ -390,6 +390,7 @@ public class Main{
 
     /* Menanyakan nomor seri barang.
      * Menampilkan barang dan menanyakan untuk dimasukkan ke keranjang.
+     * Cek ada/tidak, cek sudah habis/belum, cek sudah ada di keranjang/belum, cek jumlah lebih/tidak.
      */
     private void beli(){
         do {
@@ -399,12 +400,33 @@ public class Main{
             for (Barang barang : gudang.getStok()){
                 if (barang.getNomorSeri().equalsIgnoreCase(nomorBarang)){
                     barangPilihan = barang;
-                    System.out.println("Nama Barang : " + barangPilihan.getNama() + " " + barangPilihan.getHarga());
-                    System.out.println("Masukkan jumlah yang ingin anda beli : ");
-                    barangPilihan.setJumlah(inAngka.nextInt());
-                    keranjang.add(barangPilihan);
-                    System.out.println(barangPilihan.getNomorSeri() + " berhasil dimasukkan keranjang sebanyak " + barangPilihan.getJumlah() + " unit");
-
+                    if (barangPilihan.getJumlah() == 0){
+                        System.out.println("Barang "+ barangPilihan.getNama() + "sudah habis")
+                    } else {
+                        for (Barang barangKeranjang : keranjang){
+                            if(barangPilihan.getNomorSeri().equalsIgnoreCase(barangKeranjang.getNomorSeri())){
+                                System.out.println("Barang " + barangPilihan.getNama() + "sudah ada di keranjang");
+                                System.out.println("Silahkan hapus terlebih dahulu pada menu keranjang.");
+                                           
+                            } else {                        
+                                System.out.println("Nama Barang : " + barangPilihan.getNama() + " " + barangPilihan.getHarga());
+                                System.out.println("Masukkan jumlah yang ingin anda beli : ");
+                                do{
+                                    int jumlahBarang = inAngka.nextInt();
+                                    if (jumlahBarang > barangPilihan.getJumlah()){
+                                        System.out.println("Barang tidak cukup, silahkan masukkan jumlah lain :")
+                                    }    
+                                } while(jumlahBarang <= barangPilihan.getJumlah() )
+                                
+                                barangPilihan.setJumlah(jumlahBarang);
+                                keranjang.add(barangPilihan);
+                                System.out.println(barangPilihan.getNomorSeri() + " berhasil dimasukkan keranjang sebanyak " + barangPilihan.getJumlah() + " unit");
+                                    
+                            }                            
+                            
+                        }
+                    } 
+                    
                 }
             }
             if (barangPilihan == null){
@@ -442,6 +464,7 @@ public class Main{
     
     /* Menghitung keranjang secara rekursif.
      * Menampilkan barang.
+     * Mengurangi stok barang di gudang.
      * Menambahkan barang ke belanjaan {@link #activePelanggan}.
      * Menghapus item yang sudah dihitung.
      */
@@ -451,6 +474,7 @@ public class Main{
         }
         Barang barang = keranjang.get(0);
         int harga = printdanhargaBarang(barang);
+        gudang.kurangiStok(barang.getNomorSeri(), barang.getJumlah());
         activePelanggan.addBelanjaan(barang);
         keranjang.remove(0);
         return harga + hitungAkhir(keranjang);

@@ -37,6 +37,15 @@ public class Gudang {
     public ArrayList<Barang> getStok() {
         return stok;
     }
+    
+    //Mencari barang yang tepat dan mengurangi jumlah nya.
+    public void kurangiStok(String nomorBarang, int jumlah){
+        for(Barang barang : stok){
+            if(barang.getNama().equalsIgnoreCase(nomorBarang)){
+                barang.kurangiJumlah(jumlah);
+            }
+        }
+    }
 
     //Mengambil {@link #TelponGudang}
     public String getTelponGudang() {

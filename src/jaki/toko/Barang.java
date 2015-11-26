@@ -58,6 +58,11 @@ public class Barang {
     public void setJumlah(int jumlah) {
         this.jumlah = jumlah;
     }
+    
+    //Mengurangi {@link #jumlah}
+    public void kurangiJumlah(int jumlah){
+        this.jumlah -= jumlah;
+    }
 
     //Mengambil  {@link #jenis}
     public String getJenis() {
