@@ -6,32 +6,46 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
-/** Kelas Beranda digunakan untuk melyaani pelanggan dan menjadi inti dari program
+/** Kelas Main sebagai Beranda digunakan untuk melayani pelanggan dan menjadi inti dari program
  *
  * @author Harridi Ilman Tovid
  * @version 0.1 Built Nov 11, 2015.
  */
 
 
-public class Main{ //Beranda
+public class Main{
 
-    //helper
+    //VAR SCANNER
     Scanner inKata = new Scanner(System.in);
     Scanner inAngka = new Scanner(System.in);
-    int pilihan = 0;
-    Pelanggan activePelanggan;
+    
+    
 
-    //variabel yang akan dipakai kemudian
-    ArrayList<Pelanggan> daftarPelanggan;
+    //VAR HELPER
+    
+    // Membuat objek gudang yang nanti akan diinisiasi oleh admin.
     Gudang gudang;
+    
+    // Menyimpan daftar pelanggan yang telah menggunakan beranda.
+    ArrayList<Pelanggan> daftarPelanggan;
+    
+    // Menyimpan pelanggan yang sedang aktif menggunakan beranda dan akan dimasukkan ke {@link #daftarPelangan}.
+    Pelanggan activePelanggan;
+    
+    // Membuat keranjang berupa daftar barang yang akan digunakan {@link #activePelanggan}.
     ArrayList<Barang> keranjang;
 
 
-    /** Program inti
-     * Program inti menjalankan program beranda dimana dimulai dari menu untuk mengaktifkan beranda
+    /** MAIN METHOD
+     * Menginisialisasi {@link #gudang}
+     * Menampilkan menu untuk admin.
+     *  menu 1 memulai method {@link #startJualan} untuk menjalankan beranda dan membuka toko.
+     *  menu 2 memulai method {@link #cekStok}
+     *  menu 3 memulai method {@link #cekOrder}
+     *  menu 4 memulai method {@link #tutupBeranda}
      */
     public void main(String[] args) {
-
+        int pilihan = 0;
         do{
             makeGudang();
             int pilihan = choiceMenuAdmin();
@@ -114,6 +128,8 @@ public class Main{ //Beranda
                 totalBelanja += printdanhargaBarang(barang);
             }
             System.out.println("Total Belanja : " + totalBelanja + " rupiah");
+            //TODO get metode bayar
+            
             System.out.print("-1 untuk keluar : ");
             choice = inAngka.nextInt();
 
@@ -346,6 +362,21 @@ public class Main{ //Beranda
         System.out.println("Berikut belanjaan anda :");
         int total = hitungAkhir(keranjang);
         System.out.println("Total belanjaan anda : " + total);
+        System.out.print("Pilih metode pembayaran (1 - Tunai, 2 - Kredit) :");
+        int metodeBayar = intAngka.nextInt();
+        if (metodeBayar == 1){
+            System.out.println("Silahkan untuk membayar langsung di kasir.");
+        } else {
+            System.out.println("Petugas kami akan segera menghubungi anda melalui telepon.");
+        }
+        pelangganActive.setMetodeBayar(metodeBayar);
+        
+        System.out.println("Terima kasih telah berbelanja di TOKO PAK ZAKI.");
+        System.out.println("");
+        System.out.println("Silahkan untuk memberikan kesempatan kepada pelanggan lainnya.");
+        inKata.nextLine();
+        //TODO clear terminal
+        
     }
 
     private int hitungAkhir(ArrayList<Barang> keranjang){

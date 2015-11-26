@@ -12,7 +12,7 @@ public class Pelanggan {
     String alamatPelanggan;
 
     ArrayList<Barang> belanjaan;
-
+    int metodeBayar;
 
     public Pelanggan(String namaPelanggan, String telponPelanggan, String alamatPelanggan) {
         this.namaPelanggan = namaPelanggan;
@@ -40,5 +40,9 @@ public class Pelanggan {
 
     public ArrayList<Barang> getBelanjaan() {
         return belanjaan;
+    }
+    
+    public void setMetodeBayar(metodeBayar){
+        this.metodeBayar = metodeBayar;
     }
 }
