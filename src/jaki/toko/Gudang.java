@@ -2,16 +2,22 @@ package jaki.toko;
 
 import java.util.ArrayList;
 
-/**
+/** Kelas GUdag digunakan untuk membentuk objek dari gudang
  * Created by HarridiIlman on 25/11/2015.
  */
 public class Gudang {
-
+    
+    //Menyimpan alamat gudang
     String alamatGudang;
+    
+    //Menyimpan telpon gudang
     String telponGudang;
-
+    
+    //Menyimpan stok barang yang terdiri dari {@link #barang}
     ArrayList<Barang> stok;
 
+    //Menginisiasi Gudang {@link #alamatGudang}, {@link #telponGudang}
+    //Men-'generate' isi gudang
     public Gudang(String alamatGudang, String telponGudang) {
         this.alamatGudang = alamatGudang;
         this.telponGudang = telponGudang;
@@ -27,15 +33,17 @@ public class Gudang {
 
     }
 
+    //Mengambil {@link #stok}
     public ArrayList<Barang> getStok() {
         return stok;
     }
 
-
+    //Mengambil {@link #TelponGudang}
     public String getTelponGudang() {
         return telponGudang;
     }
 
+    //Mengambil {@link #AlamatGudang}
     public String getAlamatGudang() {
         return alamatGudang;
     }
