@@ -56,7 +56,7 @@ public class Pelanggan {
     }
     
     //Memasukkan {@link #metodeBayar}
-    public void setMetodeBayar(metodeBayar){
+    public void setMetodeBayar(int metodeBayar){
         this.metodeBayar = metodeBayar;
     }
 }

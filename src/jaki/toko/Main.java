@@ -48,7 +48,7 @@ public class Main{
         int pilihanAdmin = 0;
         do{
             makeGudang();
-            int pilihanAdmin = choiceMenuAdmin();
+            pilihanAdmin = choiceMenuAdmin();
             switch (pilihanAdmin){
                 case 1 : startJualan();
                     break;
@@ -104,15 +104,13 @@ public class Main{
     }
     /* Memulai jualan dengan memanggil method {@link #startJualan}
      */
-    private void startJualan(){
-        do{
+    private void startJualan() {
+        int pilihanAdmin = 0;
+        do {
             menuJualan();
             System.out.print("Ketik 0 untuk melanjutkan ke pelanggan selanjutnya (-1 untuk berhenti jualan) : ");
-            int pilihanAdmin = inAngka.nextInt();      
-            
-        }while(!(pilihanAdmin == -1))
+        } while (!(pilihanAdmin == -1));
     }
-    
     /* Mencetak stok barang dari {@link #gudang}
      */
     private void cekStok(){
@@ -178,9 +176,10 @@ public class Main{
      *  menu 4 memulai method {@link #checkout} untuk menyelesaikan belanja
      */
     private void menuJualan(){
+        int pilihanPelanggan = 0;
         do{
             addPelanggan();
-            int pilihanPelanggan = choiceMenuPelanggan();
+            pilihanPelanggan = choiceMenuPelanggan();
             switch (pilihanPelanggan){
                 case 1 : cekJualan();
                     break;
@@ -390,52 +389,102 @@ public class Main{
 
     /* Menanyakan nomor seri barang.
      * Menampilkan barang dan menanyakan untuk dimasukkan ke keranjang.
-     * Cek ada/tidak, cek sudah habis/belum, cek sudah ada di keranjang/belum, cek jumlah lebih/tidak.
+     * Cek ada/tidak dengan {@link #cekEksis} ,
+     * Cek sudah habis/belum dengan {@link #cekSedia},
+     * Cek sudah ada di keranjang/belum dengan {@link #cekBandingKeranjang},
+     * Cek jumlah lebih/tidak dengan {@link #cekBanyakPesanan}.
      */
-    private void beli(){
+    private void beli() {
+        int pilihan = 0;
         do {
             System.out.println("Masukkan nomor seri barang :");
             String nomorBarang = inKata.nextLine();
-            Barang barangPilihan = null;
-            for (Barang barang : gudang.getStok()){
-                if (barang.getNomorSeri().equalsIgnoreCase(nomorBarang)){
-                    barangPilihan = barang;
-                    if (barangPilihan.getJumlah() == 0){
-                        System.out.println("Barang "+ barangPilihan.getNama() + "sudah habis")
-                    } else {
-                        for (Barang barangKeranjang : keranjang){
-                            if(barangPilihan.getNomorSeri().equalsIgnoreCase(barangKeranjang.getNomorSeri())){
-                                System.out.println("Barang " + barangPilihan.getNama() + "sudah ada di keranjang");
-                                System.out.println("Silahkan hapus terlebih dahulu pada menu keranjang.");
-                                           
-                            } else {                        
-                                System.out.println("Nama Barang : " + barangPilihan.getNama() + " " + barangPilihan.getHarga());
-                                System.out.println("Masukkan jumlah yang ingin anda beli : ");
-                                do{
-                                    int jumlahBarang = inAngka.nextInt();
-                                    if (jumlahBarang > barangPilihan.getJumlah()){
-                                        System.out.println("Barang tidak cukup, silahkan masukkan jumlah lain :")
-                                    }    
-                                } while(jumlahBarang <= barangPilihan.getJumlah() )
-                                
-                                barangPilihan.setJumlah(jumlahBarang);
-                                keranjang.add(barangPilihan);
-                                System.out.println(barangPilihan.getNomorSeri() + " berhasil dimasukkan keranjang sebanyak " + barangPilihan.getJumlah() + " unit");
-                                    
-                            }                            
-                            
-                        }
-                    } 
-                    
+
+            Barang barangPilihan = cekEksis(nomorBarang);
+            if (barangPilihan == null) {
+                System.out.print("Barang tidak ditemukan");
+                System.out.println();
+                continue;
+            }
+
+            if (cekSedia(barangPilihan)) {
+                System.out.println("Barang " + barangPilihan.getNama() + "sudah habis");
+                System.out.println();
+                continue;
+            }
+
+            if (cekBandingKeranjang(barangPilihan)) {
+                System.out.println("Barang " + barangPilihan.getNama() + "sudah ada di keranjang.");
+                System.out.println("Silahkan hapus barang di menu keranjang.");
+                System.out.println();
+                continue;
+            }
+
+            System.out.println("Nama Barang : " + barangPilihan.getNama() + " " + barangPilihan.getHarga());
+            System.out.println("Masukkan jumlah yang ingin anda beli : ");
+            int jumlahBarang = inAngka.nextInt();
+
+            if (cekBanyakPesanan(barangPilihan, jumlahBarang)) {
+                System.out.println("Barang tidak cukup, silahkan masukkan jumlah lain :");
+                System.out.println();
+                continue;
+            }
+
+            barangPilihan.setJumlah(jumlahBarang);
+            keranjang.add(barangPilihan);
+            System.out.println(barangPilihan.getNomorSeri() + " berhasil dimasukkan keranjang sebanyak " + barangPilihan.getJumlah() + " unit");
+
+            System.out.println();
+            System.out.println("Ketik 0 untuk membeli barang lain, ketik -1 untuk kembali :");
+
+            pilihan = inAngka.nextInt();
+
+        } while (!(pilihan == -1));
+    }
+
+    // Memeriksa apakah barang dijual
+    private Barang cekEksis(String nomorBarang){
+        Barang barangPilihan = null;
+        for (Barang barang : gudang.getStok()) {
+            if (barang.getNomorSeri().equalsIgnoreCase(nomorBarang)) {
+                barangPilihan = barang;
+            }
+        }
+        return barangPilihan;
+    }
+
+    // Memeriksa ketersediaan barang
+    private boolean cekSedia(Barang barangPilihan){
+        for (Barang barangStok : gudang.getStok()){
+            if (barangStok.getNomorSeri().equalsIgnoreCase(barangPilihan.getNomorSeri())){
+                if (barangStok.getJumlah() > 0){
+                    return true;
                 }
             }
-            if (barangPilihan == null){
-                System.out.print("Barang tidak ditemukan");
+        }
+        return false;
+    }
+
+    // Memeriksa apakah sudah dikeranjang
+    private boolean cekBandingKeranjang(Barang barangPilihan){
+        for (Barang barangKeranjang : keranjang){
+            if (barangKeranjang.getNomorSeri().equalsIgnoreCase(barangPilihan.getNomorSeri())){
+                return true;
             }
-            System.out.print("Ketik -1 untuk kembali, 0 untuk membeli barang lain : ");
+        }
+        return false;
+    }
 
-        } while (!(inAngka.nextInt() == -1));
-
+    // Memeriksa apakah pesanan cukup dari stok yang ada
+    private boolean cekBanyakPesanan(Barang barangPilihan, int jumlahBarang){
+        for (Barang barangStok : gudang.getStok()){
+            if (barangStok.getNomorSeri().equalsIgnoreCase(barangPilihan.getNomorSeri())){
+                if (barangStok.getJumlah() >= jumlahBarang){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /* Menghitung belnajaan 
@@ -446,13 +495,14 @@ public class Main{
         int total = hitungAkhir(keranjang);
         System.out.println("Total belanjaan anda : " + total);
         System.out.print("Pilih metode pembayaran (1 - Tunai, 2 - Kredit) :");
-        int metodeBayar = intAngka.nextInt();
+        int metodeBayar = inAngka.nextInt();
         if (metodeBayar == 1){
             System.out.println("Silahkan untuk membayar langsung di kasir.");
         } else {
             System.out.println("Petugas kami akan segera menghubungi anda melalui telepon.");
         }
-        pelangganActive.setMetodeBayar(metodeBayar);
+
+        activePelanggan.setMetodeBayar(metodeBayar);
         
         daftarPelanggan.add(activePelanggan);
         System.out.println("Terima kasih telah berbelanja di TOKO PAK ZAKI.");
